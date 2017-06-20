@@ -1,0 +1,54 @@
+#!/bin/bash
+# gitの差分確認用
+commitId=""
+if [ $# -eq 1 ]; then
+  commitId="${1}"
+fi
+if [ $# -eq 2 ]; then
+  commitId="${1} ${2}"
+fi
+if [ -z "$commitId" ]; then
+   echo "git log でコミット番号調べて一つは引数にいれてね"
+   exit
+fi
+
+dir=$(pwd)
+
+gitLog(){
+  j=0
+  for file in ${status}
+  do
+    files[$i]=${file}
+    echo -e "[\033[0;34m$i\033[0m]\033[0;${1}m${files[$i]}\033[0m"
+    let i++
+  done
+}
+
+while : ;do
+  files=()
+  # onlyAdd,unstage
+  flag=()
+  status=()
+  i=1
+
+  echo "git diff --name-only ${commitId}"
+  status=$(git diff --name-only ${commitId})
+  gitLog "33"
+
+  if [ -n "$num" ]; then
+    echo "さっき選んだ番号:"$num
+  fi
+
+  read -p "ファイルの番号選択:" num;
+  expr $num + 1 > /dev/null 2>&1
+  if [ $? -lt 2 ]; then
+
+    git difftool $commitId ${files[$num]} -Y &
+    sleep 1s
+    echo -e "\033[;H\033[2J"
+    echo "git difftool $commitId ${files[$num]} -Y &"
+    osascript -e 'tell application "FileMerge" to activate'
+  else
+    exit
+  fi
+done

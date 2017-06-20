@@ -1,0 +1,33 @@
+- hosts: 192.168.33.11
+  user: root
+  gather_facts: no
+  handlers:
+    - name: restart mysqld
+      service: name=mysqld state=restarted
+  tasks:
+    - name: update
+      yum: name=*
+    - name: yum install
+      yum: name="{{item.name}}"
+      with_items:
+        - {name: wget}
+        - {name: vim}
+        - {name: gcc}
+        - {name: tar}
+        - {name: sudo}
+        - {name: git}
+        - {name: make}
+        - {name: libxml2}
+        - {name: libxml2-devel}
+        - {name: httpd24}
+        - {name: mod24_ssl.x86_64}
+    - name: apache conf
+      shell: >-
+        c='/etc/httpd/conf/httpd.conf' &&
+        k='<Directory "\/var\/www\/html">' &&
+        s='AllowOverride None' &&
+        r='AllowOverride All' &&
+        mv $c $c.backup &&
+        awk "/$k/{f=1} f==1&&/$s/{sub(/.+/,\"$r\"); f=0} 1" $c.backup > $c
+    - name: apache conf
+      shell: sed -i -e '/^<Directory \"\/var\/www\/html\">/a EnableMMAP Off' /etc/httpd/conf/httpd.conf

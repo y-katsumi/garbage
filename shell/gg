@@ -1,0 +1,104 @@
+#!/bin/bash
+# gitのコミット前確認用
+commitId="^HEAD"
+dir=$(pwd)
+
+gitStatus(){
+  j=0
+  for file in ${status}
+  do
+    k=`expr $j % 2`
+    if [ $k -eq 1 ]; then
+      files[$i]=${file}
+      echo -e "[\033[0;34m$i\033[0m]\033[0;${2}m${files[$i]}\033[0m"
+      flag[$i]=$1
+      let i++
+    fi
+    let j++
+  done
+}
+echo -e "\033[;H\033[2J"
+echo "git difftool ${commitId} 選択されたファイル -Y &  を実行します"
+while : ;do
+  files=()
+  # onlyAdd,unstage
+  flag=()
+  status=()
+  i=1
+
+  echo 修正されたファイル（stageにない）
+  status=$(git status --porcelain | grep " M ")
+  gitStatus "" "31"
+
+  echo "新規作成ファイル(addだけします)"
+  status=$(git status --porcelain | grep "?? ")
+  gitStatus "onlyAdd" "31"
+
+  echo conflictしてた？
+  status=$(git status --porcelain | grep "UU ")
+  gitStatus "" "31"
+
+  echo 新規でstageに追加された
+  status=$(git status --porcelain | grep "A  ")
+  gitStatus "unstage" "32"
+
+  echo 新規追加で修正された
+  status=$(git status --porcelain | grep "AM ")
+  gitStatus "" "32"
+
+  echo stageにある
+  status=$(git status --porcelain | grep "M  ")
+  gitStatus "unstage" "32"
+
+  echo stageにあったけど修正された
+  status=$(git status --porcelain | grep "MM ")
+  gitStatus "" "31"
+
+  echo stageにあげたリネームされたファイル
+  status=$(git status --porcelain | grep "R  ")
+  gitStatus "unstage" "34"
+
+  echo stageにあげた削除されたファイル
+  status=$(git status --porcelain | grep "D  ")
+  gitStatus "unstage" "34"
+
+  echo 削除された
+  status=$(git status --porcelain | grep " D ")
+  gitStatus "onlyAdd" "33"
+
+  if [ -n "$num" ]; then
+    echo "さっき選んだ番号:"$num
+  fi
+
+  read -p "ファイルの番号選択:" num;
+  expr $num + 1 > /dev/null 2>&1
+  if [ $? -lt 2 ]; then
+    if [ "${flag[$num]}" != "onlyAdd" ]; then
+      git difftool $commitId ${files[$num]} -Y &
+      sleep 1s
+      echo -e "\033[;H\033[2J"
+      echo "git difftool $commitId ${files[$num]} -Y &"
+      osascript -e 'tell application "FileMerge" to activate'
+    fi
+
+    if [ "${flag[$num]}" != "unstage" ]; then
+      read -p "addはy,戻すのはu(y/n/u):" Yn ;
+      if [ "${Yn}" = "y" ]; then
+        git add ${files[$num]}
+      fi
+      if [ "${Yn}" = "u" ]; then
+        read -p "${files[$num]}戻しちゃうよ？(y/n):" Yn ;
+        if [ "${Yn}" = "y" ]; then
+          git checkout HEAD ${files[$num]}
+        fi
+      fi
+    else
+      read -p "Unstaged？(y/n):" Yn ;
+      if [ "${Yn}" = "y" ]; then
+        git reset HEAD ${files[$num]}
+      fi
+    fi
+  else
+    exit
+  fi
+done
