@@ -1,7 +1,7 @@
 #!/bin/bash
 # gitのコミット前確認用
 commitId="^HEAD"
-dir=$(pwd)
+dir=$(git rev-parse --show-cdup)
 
 gitStatus(){
   j=0
@@ -17,9 +17,10 @@ gitStatus(){
     let j++
   done
 }
-echo -e "\033[;H\033[2J"
-echo "git difftool ${commitId} 選択されたファイル -Y &  を実行します"
 while : ;do
+  echo -e "\033[;H\033[2J"
+  echo "git difftool ${commitId} 選択されたファイル -Y &  を実行します"
+
   files=()
   # onlyAdd,unstage
   flag=()
@@ -36,6 +37,8 @@ while : ;do
 
   echo conflictしてた？
   status=$(git status --porcelain | grep "UU ")
+  gitStatus "" "31"
+  status=$(git status --porcelain | grep "AA ")
   gitStatus "" "31"
 
   echo 新規でstageに追加された
@@ -74,28 +77,31 @@ while : ;do
   expr $num + 1 > /dev/null 2>&1
   if [ $? -lt 2 ]; then
     if [ "${flag[$num]}" != "onlyAdd" ]; then
-      git difftool $commitId ${files[$num]} -Y &
+      git difftool $commitId $dir${files[$num]} -Y &
       sleep 1s
-      echo -e "\033[;H\033[2J"
-      echo "git difftool $commitId ${files[$num]} -Y &"
+      # echo -e "\033[;H\033[2J"
+      echo "git difftool $commitId $dir${files[$num]} -Y &"
       osascript -e 'tell application "FileMerge" to activate'
     fi
 
     if [ "${flag[$num]}" != "unstage" ]; then
-      read -p "addはy,戻すのはu(y/n/u):" Yn ;
+      read -p "addはy,戻すのはu,open(y/n/u/o):" Yn ;
       if [ "${Yn}" = "y" ]; then
-        git add ${files[$num]}
+        git add $dir${files[$num]}
       fi
       if [ "${Yn}" = "u" ]; then
-        read -p "${files[$num]}戻しちゃうよ？(y/n):" Yn ;
+        read -p "$dir${files[$num]}戻しちゃうよ？(y/n):" Yn ;
         if [ "${Yn}" = "y" ]; then
-          git checkout HEAD ${files[$num]}
+          git checkout HEAD $dir${files[$num]}
         fi
+      fi
+      if [ "${Yn}" = "o" ]; then
+        open $dir${files[$num]}
       fi
     else
       read -p "Unstaged？(y/n):" Yn ;
       if [ "${Yn}" = "y" ]; then
-        git reset HEAD ${files[$num]}
+        git reset HEAD $dir${files[$num]}
       fi
     fi
   else
