@@ -64,6 +64,13 @@ functions:
           path: todos/{id}
           method: delete
           cors: true
+  showAll:
+    handler: handler.showAll
+    events:
+      - http:
+          path: todos/show
+          method: get
+          cors: true
 
 resources:
   Resources:

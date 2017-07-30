@@ -35,3 +35,17 @@ new AWS.DynamoDB.DocumentClient({
     region: 'localhost',
     endpoint: 'http://localhost:8000'
 })
+
+データ登録
+curl -X POST http://localhost:3000/todos --data '{ "column1" : "data1","column2": "data2" }'
+curl -X POST http://localhost:3000/todos --data '{ "column1" : "data3","column2": "data4" }'
+
+curl -X GET http://localhost:3000/todos/show
+
+
+yaml
+```
+headers:
+              Content-Type: "'text/html'"
+```
+でhtmlにできる

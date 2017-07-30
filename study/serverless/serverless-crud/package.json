@@ -8,6 +8,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "aa": "^0.1.40",
     "aws-sdk": "^2.6.7",
     "serverless-dynamodb-local": "^0.2.22",
     "uuid": "^2.0.3"
