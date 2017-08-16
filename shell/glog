@@ -1,5 +1,6 @@
 #!/bin/bash
 # gitの差分確認用
+dir=$(git rev-parse --show-cdup)
 commitId=""
 if [ $# -eq 1 ]; then
   commitId="${1}"
@@ -11,8 +12,6 @@ if [ -z "$commitId" ]; then
    echo "git log でコミット番号調べて一つは引数にいれてね"
    exit
 fi
-
-dir=$(pwd)
 
 gitLog(){
   j=0
@@ -43,10 +42,10 @@ while : ;do
   expr $num + 1 > /dev/null 2>&1
   if [ $? -lt 2 ]; then
 
-    git difftool $commitId ${files[$num]} -Y &
+    git difftool $commitId $dir${files[$num]} -Y &
     sleep 1s
     echo -e "\033[;H\033[2J"
-    echo "git difftool $commitId ${files[$num]} -Y &"
+    echo "git difftool $commitId $dir${files[$num]} -Y &"
     osascript -e 'tell application "FileMerge" to activate'
   else
     exit
