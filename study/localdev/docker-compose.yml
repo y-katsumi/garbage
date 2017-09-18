@@ -1,0 +1,23 @@
+version: '2'
+services:
+  db:
+    build: ./docker-compose//Dockerfile/mysql
+    # vagrantで共有していないフォルダにする
+    volumes:
+      - "/mysql_back/localdev:/var/lib/mysql/"
+    # restart: always
+    # privileged: true
+    # https://inamuu.com/docker-compose%E3%81%A7%E3%82%B3%E3%83%B3%E3%83%86%E3%83%8A%E3%81%8C%E8%B5%B7%E5%8B%95%E3%81%97%E3%81%AA%E3%81%84/
+    tty: true
+
+  web:
+    build: ./docker-compose//Dockerfile/php7
+    volumes:
+      - "/home/vagrant/src/garbage/study/localdev/laravel:/var/www/html/"
+    links:
+      - db
+    ports:
+      - "192.168.33.10:80:80"
+    # restart: always
+    # privileged: true
+    tty: true
