@@ -13,7 +13,9 @@ services:
   web:
     build: ./docker-compose//Dockerfile/php7
     volumes:
-      - "/home/vagrant/src/garbage/study/localdev/laravel:/var/www/html/"
+      - "/home/vagrant/src/garbage/study/localdev/laravel:/var/www/laravel/"
+    environment:
+      DOCUMENT_ROOT: /var/www/laravel/blog/public
     links:
       - db
     ports:
