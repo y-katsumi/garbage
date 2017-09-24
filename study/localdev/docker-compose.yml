@@ -15,11 +15,12 @@ services:
     volumes:
       - "/home/vagrant/src/garbage/study/localdev/laravel:/var/www/laravel/"
     environment:
-      DOCUMENT_ROOT: /var/www/laravel/blog/public
+      DOCUMENT_ROOT: /var/www/laravel/public
     links:
       - db
     ports:
       - "192.168.33.10:80:80"
+      - "192.168.33.10:81:81"
     # restart: always
     # privileged: true
     tty: true

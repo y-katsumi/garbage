@@ -60,6 +60,10 @@ RUN echo "compinit" >> ~/.zshrc && \
     echo "autoload -U compinit; compinit" >> ~/.zshrc && \
     echo "PROMPT=\"docker %m $ \"" >> ~/.zshrc
 
+ADD index.php /var/www/adminer/index.php
+ADD vhost.conf /etc/httpd/conf.d/vhost.conf
+
+
 # ENTRYPOINT ["service", "httpd", "start"]
 # http://enakai00.hatenablog.com/entry/20140824/1408855090
 ADD init.sh /usr/local/bin/init.sh
