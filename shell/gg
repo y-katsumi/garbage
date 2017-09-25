@@ -10,7 +10,7 @@ gitStatus(){
     k=`expr $j % 2`
     if [ $k -eq 1 ]; then
       files[$i]=${file}
-      echo -e "[\033[0;34m$i\033[0m]\033[0;${2}m${files[$i]}\033[0m"
+      echo -e "[\033[0;34m$i\033[0m]\033[0;${2}m${dir}${files[$i]}\033[0m"
       flag[$i]=$1
       let i++
     fi
