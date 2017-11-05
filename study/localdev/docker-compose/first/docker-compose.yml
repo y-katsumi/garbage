@@ -1,19 +1,19 @@
 version: '2'
 services:
   db:
-    build: ./docker-compose//Dockerfile/mysql
+    build: ../../docker-compose/Dockerfile/mysql
     # vagrantで共有していないフォルダにする
     volumes:
-      - "/mysql_back/localdev:/var/lib/mysql/"
+      - "../../dbbackup/first:/var/lib/mysql/"
     # restart: always
     # privileged: true
     # https://inamuu.com/docker-compose%E3%81%A7%E3%82%B3%E3%83%B3%E3%83%86%E3%83%8A%E3%81%8C%E8%B5%B7%E5%8B%95%E3%81%97%E3%81%AA%E3%81%84/
     tty: true
 
   web:
-    build: ./docker-compose//Dockerfile/php7
+    build: ../../docker-compose/Dockerfile/php7
     volumes:
-      - "/home/vagrant/src/:/var/www/src/"
+      - "../../src/:/var/www/src/"
     environment:
       DOCUMENT_ROOT: /var/www/src
     links:
