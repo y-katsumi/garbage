@@ -5,8 +5,10 @@ Vagrant.configure("2") do |config|
   config.vm.network "private_network", ip: "192.168.33.12"
   config.vm.network "private_network", ip: "192.168.33.13"
 
-  config.vm.synced_folder "./src", "/home/vagrant/src", id: "core1", :nfs => true, :mount_options => ['nolock,vers=3,udp']
-  config.vm.synced_folder "./dbbackup", "/home/vagrant/dbbackup", id: "core2", :nfs => true, :mount_options => ['nolock,vers=3,udp']
+  # https://qiita.com/polidog/items/8859cf08aa5c24d4e1bd
+  config.vm.synced_folder "./src", "/home/vagrant/src", id: "ubunt1", :nfs => true, :mount_options => ['nolock,vers=3,udp']
+  config.vm.synced_folder "./dbbackup", "/home/vagrant/dbbackup", id: "ubunt2", :nfs => true, :mount_options => ['nolock,vers=3,udp']
+  config.vm.synced_folder "./docker-compose", "/home/vagrant/docker-compose", id: "ubunt3", :nfs => true, :mount_options => ['nolock,vers=3,udp']
 
   config.vm.provider :virtualbox do |vb|
 
