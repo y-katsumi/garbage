@@ -1,0 +1,32 @@
+version: '2'
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - "./docker-mysql:/var/lib/mysql"
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sampleDB
+      MYSQL_USER: dummy
+      MYSQL_PASSWORD: root
+
+  web:
+    privileged: true
+    build: ./web
+    volumes:
+      - "../laravel/:/var/www/laravel/"
+    environment:
+      DOCUMENT_ROOT: /var/www/laravel/public
+    links:
+      - db
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+      - "9001:9001"
+    # restart: always
+    # privileged: true
+    tty: true
