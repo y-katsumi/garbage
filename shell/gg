@@ -19,7 +19,7 @@ gitStatus(){
 }
 while : ;do
   echo -e "\033[;H\033[2J"
-  echo "git difftool ${commitId} 選択されたファイル -Y &  を実行します"
+  echo "git difftool -Y ${commitId} 選択されたファイル &  を実行します"
 
   files=()
   # onlyAdd,unstage
@@ -77,10 +77,10 @@ while : ;do
   expr $num + 1 > /dev/null 2>&1
   if [ $? -lt 2 ]; then
     if [ "${flag[$num]}" != "onlyAdd" ]; then
-      git difftool $commitId $dir${files[$num]} -Y &
+      yes | git difftool $commitId $dir${files[$num]} &
       sleep 1s
       # echo -e "\033[;H\033[2J"
-      echo "git difftool $commitId $dir${files[$num]} -Y &"
+      echo "yes | git difftool $commitId $dir${files[$num]} &"
       osascript -e 'tell application "FileMerge" to activate'
     fi
 
