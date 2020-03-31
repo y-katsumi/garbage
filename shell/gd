@@ -1,0 +1,37 @@
+#!/bin/bash
+# ローカルブランチの削除
+
+gitBranch(){
+  for branch in ${gitCommand}
+  do
+    if [ "${file}" != "*" ]; then
+      branchs[$i]=${branch}
+      echo -e "[\033[0;34m$i\033[0m]\033[0;${1}m${branchs[$i]}\033[0m"
+      let i++
+    fi
+  done
+}
+echo -e "\033[;H\033[2J"
+echo "git branch --merged"
+
+while : ;do
+
+  branchs=()
+  i=1
+
+  echo マージされたローカルブランチ
+  gitCommand=$(git branch | sed -e s/\*//)
+  gitBranch "33"
+
+  if [ -n "$num" ]; then
+    echo "さっき選んだ番号:"$num
+  fi
+
+  read -p "ファイルの番号選択:" num;
+  if [ "${branchs[$num]}" != "" ]; then
+    git branch -D ${branchs[$num]}
+    echo git branch -D ${branchs[$num]}
+  else
+    exit
+  fi
+done
