@@ -3,7 +3,7 @@
 
 while : ;do
   adb shell input tap 343 2454
-  wait=$(($RANDOM % 10))
+  wait=$(($RANDOM % 3 + 4))
   echo "$wait"
   sleep $wait
 done
