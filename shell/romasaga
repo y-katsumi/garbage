@@ -6,7 +6,7 @@ while : ;do
   echo "$loop"
   sleep 3
 
-  if [ 100 -eq $loop ]; then
+  if [ 20 -eq $loop ]; then
     echo "回復"
     adb shell input tap 343 2454
     # スタミナ不足はい
@@ -27,6 +27,7 @@ while : ;do
     # （アイテム選択）閉じる（オートとかぶらないように）
     sleep 3
     adb shell input tap 700 2350
+    loop=$((0))
   fi
 
   let loop++
