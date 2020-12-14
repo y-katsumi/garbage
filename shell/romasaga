@@ -1,9 +1,33 @@
 #!/bin/bash
 
-
+loop=0
 while : ;do
   adb shell input tap 343 2454
-  wait=$(($RANDOM % 3 + 4))
-  echo "$wait"
-  sleep $wait
+  echo "$loop"
+  sleep 3
+
+  if [ 100 -eq $loop ]; then
+    echo "回復"
+    adb shell input tap 343 2454
+    # スタミナ不足はい
+    sleep 3
+    adb shell input tap 900 1700
+    # 使用する（アイテム選択）
+    sleep 3
+    adb shell input tap 1100 2000
+    # MAX
+    sleep 3
+    adb shell input tap 1000 1500
+    # 回復する
+    sleep 3
+    adb shell input tap 900 2000
+    # （回復した時の）閉じる（どこでもよい）
+    sleep 3
+    adb shell input tap 900 2000
+    # （アイテム選択）閉じる（オートとかぶらないように）
+    sleep 3
+    adb shell input tap 700 2350
+  fi
+
+  let loop++
 done
